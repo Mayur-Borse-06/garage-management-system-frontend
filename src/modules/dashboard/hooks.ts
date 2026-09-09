@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { getDashboard } from './api'
-import type { DashboardPeriod } from './types'
 
 const dashboardQueryKey = ['dashboard']
 
-const useDashboardData = (period: DashboardPeriod) =>
+const useDashboardData = () =>
   useQuery({
-    queryKey: [...dashboardQueryKey, period],
-    queryFn: () => getDashboard(period),
+    queryKey: dashboardQueryKey,
+    queryFn: () => getDashboard(),
   })
 
 export { useDashboardData }

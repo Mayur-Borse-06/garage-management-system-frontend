@@ -34,10 +34,13 @@ function CustomerDetails({ customer }: { customer: Customer }) {
 }
 
 export function CustomersPage() {
-  const { data } = useCustomersData();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data } = useCustomersData({ page, limit });
   const deleteCustomerMutation = useDeleteCustomer();
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const customers = data?.customers || [];
+  const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / limit));
 
   const confirmDelete = (customer: Customer) => {
     const toastId = toast.warning(
@@ -65,7 +68,7 @@ export function CustomersPage() {
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_2px_0_rgba(15,23,42,0.02)]">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm text-slate-500">Customer list</div>
-          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">Search</div>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">Active customers</div>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
@@ -105,6 +108,7 @@ export function CustomersPage() {
             </tbody>
           </table>
         </div>
+        <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-slate-500"><span>Page {page} of {totalPages}</span><div className="flex gap-2"><Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>Previous</Button><Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((current) => current + 1)}>Next</Button></div></div>
       </div>
       <Modal open={selectedCustomer !== null} title="Customer Details" onClose={() => setSelectedCustomer(null)}>
         {selectedCustomer ? <CustomerDetails customer={selectedCustomer} /> : null}

@@ -1,5 +1,3 @@
-export type DashboardPeriod = 'this_month'
-
 export type DashboardJobCardStatus = 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
 
 export interface DashboardMetric {

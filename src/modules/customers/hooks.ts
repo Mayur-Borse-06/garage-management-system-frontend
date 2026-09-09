@@ -1,18 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { createCustomer, deleteCustomer, getCustomer, getCustomers, updateCustomer } from "./api"
+import { createCustomer, deleteCustomer, getCustomer, getCustomers, updateCustomer, type CustomerListParams } from "./api"
 import type { Customer } from "./types"
 import type { CustomerPayload } from "./schemas"
 
 const customersQueryKey = ["customers"]
 
-const useCustomersData = () => {
-    return useQuery({
-        queryKey: customersQueryKey,
-        queryFn: getCustomers,
-    })
-}
+const useCustomersData = (params: CustomerListParams = { page: 1, limit: 100 }) => useQuery({
+    queryKey: [...customersQueryKey, params],
+    queryFn: () => getCustomers(params),
+})
 
 const useCustomerData = (customerId: string) => {
     return useQuery<Customer>({

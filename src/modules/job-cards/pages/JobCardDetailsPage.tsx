@@ -31,6 +31,7 @@ function StatusUpdateControls({ jobCard, onComplete }: { jobCard: JobCard; onCom
   const [status, setStatus] = useState<JobCardStatus>(jobCard.status)
 
   useEffect(() => setStatus(jobCard.status), [jobCard.status])
+  const isLocked = jobCard.status === 'COMPLETED' || jobCard.status === 'CANCELLED'
 
   return (
     <div className="flex items-end gap-2">
@@ -47,13 +48,13 @@ function StatusUpdateControls({ jobCard, onComplete }: { jobCard: JobCard; onCom
             }
             setStatus(nextStatus)
           }}
-          disabled={jobCard.status === 'COMPLETED' || updateStatusMutation.isPending}
+          disabled={isLocked || updateStatusMutation.isPending}
           className="mt-1 block h-10 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-normal normal-case tracking-normal text-slate-700 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {statuses.map((option) => <option key={option} value={option}>{option.replace('_', ' ')}</option>)}
         </select>
       </label>
-      <Button size="sm" onClick={() => updateStatusMutation.mutate({ jobCardId: jobCard._id, status })} disabled={jobCard.status === 'COMPLETED' || updateStatusMutation.isPending || status === jobCard.status}>
+      <Button size="sm" onClick={() => updateStatusMutation.mutate({ jobCardId: jobCard._id, status })} disabled={isLocked || updateStatusMutation.isPending || status === jobCard.status}>
         {updateStatusMutation.isPending ? 'Updating...' : 'Update Status'}
       </Button>
     </div>

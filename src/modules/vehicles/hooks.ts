@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { createVehicle, deleteVehicle, getVehicle, getVehicles, updateVehicle } from './api'
+import { createVehicle, deleteVehicle, getVehicle, getVehicles, updateVehicle, type VehicleListParams } from './api'
 import type { UpdateVehiclePayload, VehiclePayload } from './schemas'
 
 const vehiclesQueryKey = ['vehicles']
@@ -11,7 +11,7 @@ const getErrorMessage = (error: unknown, fallback: string) =>
     ? error.response.data.message
     : fallback
 
-const useVehiclesData = () => useQuery({ queryKey: vehiclesQueryKey, queryFn: getVehicles })
+const useVehiclesData = (params: VehicleListParams = { page: 1, limit: 100 }) => useQuery({ queryKey: [...vehiclesQueryKey, params], queryFn: () => getVehicles(params) })
 
 const useVehicleData = (vehicleId: string) =>
   useQuery({

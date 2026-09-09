@@ -2,8 +2,13 @@ import apiClient from '../../lib/apiClient'
 import type { UpdateVehiclePayload, VehiclePayload } from './schemas'
 import type { Vehicle, VehicleListResponse } from './types'
 
-const getVehicles = async (): Promise<VehicleListResponse> => {
-  const response = await apiClient.get('/api/vehicles')
+interface VehicleListParams {
+  page: number
+  limit: number
+}
+
+const getVehicles = async (params: VehicleListParams): Promise<VehicleListResponse> => {
+  const response = await apiClient.get('/api/vehicles', { params })
   return response.data.data
 }
 
@@ -28,3 +33,4 @@ const deleteVehicle = async (vehicleId: string) => {
 }
 
 export { createVehicle, deleteVehicle, getVehicle, getVehicles, updateVehicle }
+export type { VehicleListParams }

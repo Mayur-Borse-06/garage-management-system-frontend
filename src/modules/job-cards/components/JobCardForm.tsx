@@ -16,7 +16,7 @@ interface JobCardFormProps {
   onSubmit: (payload: CreateJobCardPayload) => void
 }
 
-const statuses: JobCardStatus[] = ['OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']
+const statuses: JobCardStatus[] = ['OPEN', 'IN_PROGRESS']
 const inputClassName = 'mt-2 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100'
 
 function FieldError({ message }: { message?: unknown }) {

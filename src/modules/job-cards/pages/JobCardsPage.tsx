@@ -89,6 +89,8 @@ export default function JobCardsPage() {
   const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / limit))
 
   const handleStatusChange = (jobCard: JobCard, nextStatus: JobCardStatus) => {
+    if (jobCard.status === 'CANCELLED') return
+
     if (nextStatus === 'COMPLETED') {
       setCompletionTarget(jobCard)
       return
@@ -148,12 +150,12 @@ export default function JobCardsPage() {
                   <td className="py-3 text-slate-600">{vehicleText(jobCard, vehicles)}</td>
                   <td className="py-3 text-slate-600">{mechanicText(jobCard, mechanics)}</td>
                   <td className="py-3">
-                    <select value={jobCard.status} onChange={(event) => handleStatusChange(jobCard, event.target.value as JobCardStatus)} disabled={jobCard.status === 'COMPLETED' || updateStatusMutation.isPending || completeMutation.isPending} aria-label={`Update status for ${jobCard.jobCardNumber}`} className={`h-9 min-w-[120px] rounded-lg border px-3 text-xs font-semibold outline-none transition focus:ring-2 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-70 ${statusClassName[jobCard.status]}`}>
+                    <select value={jobCard.status} onChange={(event) => handleStatusChange(jobCard, event.target.value as JobCardStatus)} disabled={jobCard.status === 'COMPLETED' || jobCard.status === 'CANCELLED' || updateStatusMutation.isPending || completeMutation.isPending} aria-label={`Update status for ${jobCard.jobCardNumber}`} className={`h-9 min-w-[120px] rounded-lg border px-3 text-xs font-semibold outline-none transition focus:ring-2 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-70 ${statusClassName[jobCard.status]}`}>
                       {statuses.map((option) => <option key={option} value={option}>{option.replace('_', ' ')}</option>)}
                     </select>
                   </td>
                   <td className="py-3 text-slate-600">{formatDate(jobCard.createdAt)}</td>
-                  <td className="py-3"><div className="flex items-center gap-1"><button type="button" title="View job card" aria-label={`View ${jobCard.jobCardNumber}`} onClick={() => setSelectedJobCard(jobCard)} className="rounded-lg p-2 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"><Eye className="h-4 w-4" /></button><Link to={`/job-cards/${jobCard._id}/edit`} title="Edit job card" aria-label={`Edit ${jobCard.jobCardNumber}`} className="rounded-lg p-2 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"><Pencil className="h-4 w-4" /></Link><button type="button" title="Deactivate job card" aria-label={`Deactivate ${jobCard.jobCardNumber}`} onClick={() => confirmDelete(jobCard)} className="rounded-lg p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600"><Trash2 className="h-4 w-4" /></button></div></td>
+                  <td className="py-3"><div className="flex items-center gap-1"><button type="button" title="View job card" aria-label={`View ${jobCard.jobCardNumber}`} onClick={() => setSelectedJobCard(jobCard)} className="rounded-lg p-2 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"><Eye className="h-4 w-4" /></button>{jobCard.status === 'CANCELLED' ? <span title="Cancelled job cards cannot be edited" aria-label={`Edit ${jobCard.jobCardNumber} unavailable`} className="cursor-not-allowed rounded-lg p-2 text-slate-300"><Pencil className="h-4 w-4" /></span> : <Link to={`/job-cards/${jobCard._id}/edit`} title="Edit job card" aria-label={`Edit ${jobCard.jobCardNumber}`} className="rounded-lg p-2 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"><Pencil className="h-4 w-4" /></Link>}<button type="button" title="Deactivate job card" aria-label={`Deactivate ${jobCard.jobCardNumber}`} onClick={() => confirmDelete(jobCard)} className="rounded-lg p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600"><Trash2 className="h-4 w-4" /></button></div></td>
                 </tr>
               )) : null}
               {!isLoading && !isError && !jobCards.length ? <tr><td colSpan={6} className="py-10 text-center text-slate-600">No job cards found.</td></tr> : null}

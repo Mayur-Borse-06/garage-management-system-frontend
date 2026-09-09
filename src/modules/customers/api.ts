@@ -2,8 +2,13 @@ import apiClient from "../../lib/apiClient";
 import type { CustomerPayload } from "./schemas";
 import type { Customer, CustomerListResponse } from "./types";
 
-const getCustomers = async (): Promise<CustomerListResponse> => {
-    const response = await apiClient.get("/api/customers");
+interface CustomerListParams {
+    page: number;
+    limit: number;
+}
+
+const getCustomers = async (params: CustomerListParams): Promise<CustomerListResponse> => {
+    const response = await apiClient.get("/api/customers", { params });
     return response.data.data;
 };
 
@@ -28,3 +33,4 @@ const deleteCustomer = async (customerId: string) => {
 };
 
 export { createCustomer, deleteCustomer, getCustomer, getCustomers, updateCustomer };
+export type { CustomerListParams };
