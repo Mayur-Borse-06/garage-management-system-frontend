@@ -36,7 +36,7 @@ const formatShortDate = (value: string) => {
 const formatChange = (changePercentage: number) => `${changePercentage > 0 ? '+' : ''}${changePercentage}% from last month`
 
 export function DashboardPage() {
-  const { data, isLoading, isError } = useDashboardData('this_month')
+  const { data, isLoading, isError } = useDashboardData();
 
   return (
     <PageContainer title="Dashboard" description="Overview of your garage operations">
